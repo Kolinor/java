@@ -56,12 +56,8 @@ public class IOCommand {
     }
 
     public void deconnexion() throws IOException {
-//        this.isRunning = false;
+      this.isRunning = false;
         socket.close();
-    }
-
-    public void setRunning(boolean etat) {
-        isRunning = etat;
     }
 
     public void run() {

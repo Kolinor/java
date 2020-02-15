@@ -60,6 +60,10 @@ public class IOCommand {
         socket.close();
     }
 
+    public void setRunning(boolean etat) {
+        isRunning = etat;
+    }
+
     public void run() {
         this.isRunning = true;
         Thread t = new Thread(new Runnable() {

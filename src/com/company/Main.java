@@ -14,7 +14,6 @@ public class Main {
        // boolean connexion = command.connexion("192.168.100.25", 5999);
         if(!connexion) return;
         command.run();
-
         String str = "";
         String choix = "";
 
@@ -27,27 +26,30 @@ public class Main {
             command.ecrireEcran("1. /serveur\n2. /clientDispo");
             choix = command.lireEcran();
 
-            switch (choix) {
-                case "/serveur":
-                    do {
-                        str = command.lireEcran();
-                        command.ecrireReseau(str);
-                        Thread.sleep(100);
-                    } while(!str.equals("back"));
-
-                    break;
-                case "/clientDispo":
-                    command.ecrireReseau("getUtilisateursOnline");
+            if(choix.equals("/serveur")) {
+                do {
+                    str = command.lireEcran();
+                    command.ecrireReseau(str);
                     Thread.sleep(100);
-                    command.ecrireEcran(command.lireReseau());
-                    break;
-                default:
-                    command.ecrireEcran("Commande inconnue");
+                } while (!str.equals("back") && !str.equals("quit"));
+                Thread.sleep(100);
+            } else if (choix.equals("/clientDispo")) {
+                command.ecrireReseau("getUtilisateursOnline");
+                Thread.sleep(100);
+            } else if(choix.substring(0,7).equals("/speak ")) {
+                // /speak
+                command.ecrireReseau("speakTo " + choix.substring(7));
+                Thread.sleep(100);
+                do {
+
+
+                }while(!str.equals("back"));
+            } else {
+                command.ecrireEcran("Commande inconnue");
             }
-            command.ecrireEcran("coucou");
             Thread.sleep(100);
         } while(!choix.equals("quit"));
-        System.out.print("sorti");
+        command.setRunning(false);
         command.deconnexion();
     }
 }

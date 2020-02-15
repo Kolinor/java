@@ -8,7 +8,7 @@ public class Main {
 
         IOCommand command = new IOCommand();
         //Fichier fichier = new Fichier();
-        boolean connexion = command.connexion("192.168.1.24", 6001);
+        boolean connexion = command.connexion("192.168.1.24", 6002);
 //        boolean connexion = command.connexion("192.168.1.24", 6003);
 //        boolean connexion = command.connexion("192.168.1.131", 6001);
        // boolean connexion = command.connexion("192.168.100.25", 5999);
@@ -16,12 +16,13 @@ public class Main {
         command.run();
         String str = "";
         String choix = "";
+        boolean quit = false;
 
         command.ecrireEcran("Quel est ton login ?");
         command.ecrireReseau(command.lireEcran());
         Thread.sleep(100);
 
-        do {
+        while(!quit) {
             command.ecrireEcran("Que voulez vous faire ?");
             command.ecrireEcran("1. /serveur\n2. /clientDispo");
             choix = command.lireEcran();
@@ -31,25 +32,25 @@ public class Main {
                     str = command.lireEcran();
                     command.ecrireReseau(str);
                     Thread.sleep(100);
-                } while (!str.equals("back") && !str.equals("quit"));
-                Thread.sleep(100);
+                    if(str.equals("quit")) {
+                        command.deconnexion();
+                        quit = true;
+                    }
+                } while (!str.equals("back") && !quit);
             } else if (choix.equals("/clientDispo")) {
                 command.ecrireReseau("getUtilisateursOnline");
                 Thread.sleep(100);
-            } else if(choix.substring(0,7).equals("/speak ")) {
+            } else if(choix.length() > 7 && choix.substring(0,7).equals("/speak ")) {
                 // /speak
                 command.ecrireReseau("speakTo " + choix.substring(7));
                 Thread.sleep(100);
                 do {
 
-
                 }while(!str.equals("back"));
             } else {
-                command.ecrireEcran("Commande inconnue");
+                System.err.println("Commande inconnue !");
             }
-            Thread.sleep(100);
-        } while(!choix.equals("quit"));
-        command.setRunning(false);
+        }
         command.deconnexion();
     }
 }

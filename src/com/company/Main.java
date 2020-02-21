@@ -16,6 +16,10 @@ public class Main {
         command.run();
         String str = "";
         String choix = "";
+        String speak = "";
+        String nom;
+        String envoieA;
+        Boolean commandeConnue = false;
 
         command.ecrireEcran("Quel est ton login ?");
         command.ecrireReseau(command.lireEcran());
@@ -23,37 +27,43 @@ public class Main {
 
         do {
             command.ecrireEcran("Que voulez vous faire ?");
-            command.ecrireEcran("1. /serveur\n2. /clientDispo");
+            command.ecrireEcran("1. /serveur\n2. /clientDispo\n3. /speak + login\n4. /quit");
             choix = command.lireEcran();
+            speak = choix;
 
-            if(choix.equals("/serveur")) {
+
+            if(choix.length() > 7 && choix.equals("/serveur")) {
                 do {
                     str = command.lireEcran();
-                    if(!str.equals("quit")) {
-                        command.ecrireReseau(str);
-                        Thread.sleep(100);
-                    } else {
-                        choix = str;
-                    }
-                } while (!str.equals("back") && !str.equals("quit"));
+
+                    command.ecrireReseau(str);
+                    choix = str;
+                } while (!str.equals("/back") && !str.equals("/quit"));
 
                 Thread.sleep(100);
-            } else if (choix.equals("/clientDispo")) {
+                commandeConnue = true;
+            } if (choix.length() > 11 && choix.equals("/clientDispo")) {
                 command.ecrireReseau("getUtilisateursOnline");
                 Thread.sleep(100);
-            } else if(choix.substring(0,7).equals("/speak ")) {
+                commandeConnue = true;
+            } if(choix.length() > 7 && speak.substring(0,7).equals("/speak ")) {
                 // /speak
-                command.ecrireReseau("speakTo " + choix.substring(7));
-                Thread.sleep(100);
+
+                nom = speak.substring(7);
+                command.ecrireEcran("Que voulez vous envoyer a " + nom);
+
                 do {
-                }while(!str.equals("back"));
+                    envoieA = command.lireEcran();
+                    if(!envoieA.equals("/back") && !envoieA.equals("/quit"))
+                        command.ecrireReseau("speakTo/" + nom + "/" + envoieA);
+                    Thread.sleep(100);
+                }while(!envoieA.equals("/back") && !envoieA.equals("/quit"));
+                commandeConnue = true;
             } else {
-                command.ecrireEcran("Commande inconnue");
+                if(!choix.equals("/quit") && !commandeConnue)
+                    command.ecrireEcran("Commande inconnue");
             }
-//            if(!choix.equals("quit"))
-//                command.deconnexion();
-            //Thread.sleep(100);
-        } while(!choix.equals("quit"));
+        } while(!choix.equals("/quit"));
         command.ecrireReseau("quit");
         command.deconnexion();
     }

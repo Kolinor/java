@@ -55,8 +55,9 @@ public class IOCommand {
         }
     }
 
-    public void deconnexion() throws IOException {
-//        this.isRunning = false;
+    public void deconnexion() throws IOException, InterruptedException {
+        this.isRunning = false;
+        Thread.sleep(100);
         socket.close();
     }
 
@@ -80,5 +81,7 @@ public class IOCommand {
             }
         });
         t.start();
+        if(!isRunning)
+            t.stop();
     }
 }
